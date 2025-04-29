@@ -1,7 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import usersRouter from './routes/users';
+import todoRouter from './routes/todo';
 import { Request, Response, NextFunction } from 'express';
+
+
+
 
 dotenv.config();
 
@@ -36,6 +40,7 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
 
 // Routes
 app.use('/users', usersRouter);
+app.use('/todos', todoRouter);
 
 app.get('/', (_req, res) => {
   res.send('Server is up and running!');
