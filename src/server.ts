@@ -4,6 +4,7 @@ import usersRouter from './routes/users';
 import todoRouter from './routes/todo';
 import { Request, Response, NextFunction } from 'express';
 
+import cors from 'cors';
 
 
 
@@ -17,6 +18,11 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 
 // Middleware to authenticate token
 interface AuthRequest extends Request {
@@ -49,3 +55,7 @@ app.get('/', (_req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });
+function customCors(arg0: { origin: string | undefined; methods: string[]; credentials: boolean; }): any {
+  throw new Error('Function not implemented.');
+}
+
