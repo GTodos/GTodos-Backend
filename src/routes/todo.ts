@@ -1,17 +1,23 @@
-import { Router } from 'express';
+import { Router, Request } from 'express';
 import db from '../db';
 import { authenticate } from '../server';
 
 const router = Router();
 
-
 export default router;
 
 // Todo routes
 router.get('/', authenticate, async (req, res) => {
-  const [todos] = await db.query('SELECT * FROM todos WHERE user_id = ?', [req.user.id]);
-  res.json(todos);
-});
+  const userId = (req as Request & {user: {id: string}}).user.id;
+  const { list_id } = req.params;
+  if(list_id) {
+    const [todos] = await db.query('SELECT * FROM todos WHERE user_id = ? AND list_id = ?', [userId, list_id]);
+    return res.json(todos);
+  } else {
+    const [todos] = await db.query('SELECT * FROM todos WHERE user_id = ?', [userId]);
+    res.json(todos);
+  }
+ });
 
 router.post('/', authenticate, async (req, res) => {
   const { title } = req.body;
