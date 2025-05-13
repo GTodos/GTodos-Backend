@@ -13,13 +13,15 @@ router.get('/', authenticate, async (req, res) => {
   res.json(todos);
 });
 
+// create todo
 router.post('/', authenticate, async (req, res) => {
   const userId = (req as Request & {user: {id: string}}).user.id;
   const { content } = req.body;
   if (!content) return res.status(400).json({ message: 'Content required' });
-
-  await db.query('INSERT INTO todos (user_id, content) VALUES (?, ?)', [userId, content]);
-  res.status(201).json({ message: 'Todo created' });
+  
+  const [result]: any = await db.execute('INSERT INTO todos (user_id, content) VALUES (?, ?)', [userId, content]);
+  console.log("result", result.insertId);
+  res.status(201).json({ id: result.insertId, content });
 });
 
 router.put('/:id', authenticate, async (req, res) => {
